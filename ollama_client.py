@@ -1,6 +1,7 @@
 """Client utilities for interacting with a local OLLAMA server."""
 from __future__ import annotations
 
+import os
 from typing import List, Dict, Optional
 
 try:  # pragma: no cover - import is trivial
@@ -15,11 +16,14 @@ class OllamaClient:
     Parameters
     ----------
     base_url:
-        URL where the OLLAMA server is accessible. Defaults to the standard
-        local installation URL.
+        URL where the OLLAMA server is accessible. If omitted the constructor
+        reads the ``OLLAMA_HOST`` environment variable and falls back to
+        ``"http://localhost:11434"`` when the variable is not set.
     """
 
-    def __init__(self, base_url: str = "http://localhost:11434") -> None:
+    def __init__(self, base_url: str | None = None) -> None:
+        if base_url is None:
+            base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
         self.base_url = base_url.rstrip("/")
 
     def generate(
