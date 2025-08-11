@@ -1,2 +1,3 @@
-requests>=2.31.0
-openai>=1.0.0  # optional; required for OpenAIClient
+requests>=2.31.0  # for HTTP calls to OLLAMA
+openai>=1.5.0     # for OpenAI API access
+tiktoken>=0.5.2   # for token counting/analysis

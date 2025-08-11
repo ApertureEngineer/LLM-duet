@@ -12,13 +12,15 @@ producing responses.
 
 ## Installation
 
-Install dependencies with:
+Install the required Python packages using pip:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-`openai` is required only when using `OpenAIClient`.
+The scripts communicate with an existing OLLAMA server over HTTP. If OLLAMA is already
+running on Windows, the Python environment in VS Code can use that instance without a
+separate installation.
 
 ## Usage
 
