@@ -1,9 +1,22 @@
-"""Utilities to allow two local OLLAMA models to converse with each other."""
+"""Utilities to orchestrate a back-and-forth between two language models.
+
+The default implementation uses a local OLLAMA server, but any client object
+providing a ``generate`` method can be supplied, enabling use of remote APIs
+such as OpenAI's chat completions.
+"""
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import List, Tuple, Protocol, runtime_checkable
 
 from ollama_client import OllamaClient
+
+
+@runtime_checkable
+class LLMClient(Protocol):
+    """Protocol describing the methods a language model client must provide."""
+
+    def generate(self, model: str, prompt: str, stream: bool = False, **kwargs: object) -> str:
+        """Return a completion for ``prompt`` from ``model``."""
 
 
 def have_conversation(
@@ -11,7 +24,7 @@ def have_conversation(
     model_b: str,
     prompt: str,
     turns: int = 4,
-    client: OllamaClient | None = None,
+    client: LLMClient | None = None,
 ) -> List[Tuple[str, str]]:
     """Have two models converse by generating responses alternately.
 
@@ -26,8 +39,8 @@ def have_conversation(
         model response. Thus, ``turns`` of 4 will produce two responses from each
         model.
     client:
-        Optional :class:`OllamaClient` instance. If omitted a new client will be
-        created.
+        Optional client implementing :class:`LLMClient`. If omitted a new
+        :class:`OllamaClient` will be created.
 
     Returns
     -------
