@@ -10,6 +10,16 @@ producing responses.
 - Supports local [OLLAMA](https://ollama.ai) servers via `OllamaClient`.
 - Includes an `OpenAIClient` for running the duet through the OpenAI API.
 
+## Installation
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+`openai` is required only when using `OpenAIClient`.
+
 ## Usage
 
 ### Command line (OLLAMA)
