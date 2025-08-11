@@ -6,7 +6,7 @@ such as OpenAI's chat completions.
 """
 from __future__ import annotations
 
-from typing import List, Tuple, Protocol, runtime_checkable
+from typing import List, Tuple, Protocol, runtime_checkable, cast
 
 from ollama_client import OllamaClient
 
@@ -49,8 +49,7 @@ def have_conversation(
         produced.
     """
 
-    if client is None:
-        client = OllamaClient()
+    client = cast(LLMClient, client or OllamaClient())
 
     history: List[Tuple[str, str]] = []
     conversation_context = prompt
