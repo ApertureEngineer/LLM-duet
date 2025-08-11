@@ -25,6 +25,8 @@ def have_conversation(
     prompt: str,
     turns: int = 4,
     client: LLMClient | None = None,
+    system_a: str | None = None,
+    system_b: str | None = None,
 ) -> List[Tuple[str, str]]:
     """Have two models converse by generating responses alternately.
 
@@ -33,32 +35,44 @@ def have_conversation(
     model_a, model_b:
         Names of the models participating in the conversation.
     prompt:
-        Initial text to seed the conversation.
+        Initial text sent to both models.
     turns:
-        Number of turns in the conversation. Each turn represents a single
-        model response. Thus, ``turns`` of 4 will produce two responses from each
-        model.
+        Number of model responses to generate. ``turns`` of ``4`` yields two
+        responses from each model.
     client:
         Optional client implementing :class:`LLMClient`. If omitted a new
-        :class:`OllamaClient` will be created.
+        :class:`OllamaClient` is created.
+    system_a, system_b:
+        Optional system prompts prepended to each model's conversation history.
 
     Returns
     -------
     list of tuple
-        A list of ``(model_name, response)`` pairs in the order they were
-        produced.
+        ``(model_name, response)`` pairs in the order produced.
     """
 
     client = cast(LLMClient, client or OllamaClient())
 
     history: List[Tuple[str, str]] = []
-    conversation_context = prompt
-    current_model = model_a
+    history_a: List[str] = []
+    history_b: List[str] = []
+    if system_a:
+        history_a.append(system_a)
+    if system_b:
+        history_b.append(system_b)
+    history_a.append(f"user: {prompt}")
+    history_b.append(f"user: {prompt}")
 
+    current_model = model_a
     for _ in range(turns):
-        response = client.generate(current_model, conversation_context, stream=False)
+        current_history = history_a if current_model == model_a else history_b
+        response = client.generate(current_model, "\n".join(current_history), stream=False)
         history.append((current_model, response))
-        conversation_context += f"\n{current_model}: {response}"
+        line = f"{current_model}: {response}"
+        if current_model == model_a:
+            history_b.append(line)
+        else:
+            history_a.append(line)
         current_model = model_b if current_model == model_a else model_a
 
     return history
