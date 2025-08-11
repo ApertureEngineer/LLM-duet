@@ -10,6 +10,18 @@ producing responses.
 - Supports local [OLLAMA](https://ollama.ai) servers via `OllamaClient`.
 - Includes an `OpenAIClient` for running the duet through the OpenAI API.
 
+## Installation
+
+Install the required Python packages using pip:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The scripts communicate with an existing OLLAMA server over HTTP. If OLLAMA is already
+running on Windows, the Python environment in VS Code can use that instance without a
+separate installation.
+
 ## Usage
 
 ### Command line (OLLAMA)
