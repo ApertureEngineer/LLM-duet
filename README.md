@@ -27,7 +27,8 @@ separate installation.
 ### Command line (OLLAMA)
 
 With an OLLAMA server running locally you can start a conversation directly
-from the command line:
+from the command line. The client reads the ``OLLAMA_HOST`` environment
+variable to locate the server; it defaults to ``http://localhost:11434``:
 
 ```bash
 python conversation.py "Discuss the future of robotics" --model-a llama2 --model-b mistral --turns 4
@@ -35,8 +36,8 @@ python conversation.py "Discuss the future of robotics" --model-a llama2 --model
 
 ### From Python using an OLLAMA server
 
-`OllamaClient` connects to any running OLLAMA instance. Set `base_url` when the server is on
-another machine or on Windows:
+`OllamaClient` connects to any running OLLAMA instance. Set `base_url` or
+``OLLAMA_HOST`` when the server is on another machine or on Windows:
 
 ```python
 from conversation import have_conversation
