@@ -7,7 +7,7 @@ producing responses.
 ## Features
 
 - `conversation.py` orchestrates a back-and-forth between two models.
-- Supports local [OLLAMA](https://ollama.ai) servers via `OllamaClient`.
+- Supports local or remote [OLLAMA](https://ollama.ai) servers via `OllamaClient`.
 - Includes an `OpenAIClient` for running the duet through the OpenAI API.
 
 ## Installation
@@ -31,6 +31,21 @@ from the command line:
 
 ```bash
 python conversation.py "Discuss the future of robotics" --model-a llama2 --model-b mistral --turns 4
+```
+
+### From Python using an OLLAMA server
+
+`OllamaClient` connects to any running OLLAMA instance. Set `base_url` when the server is on
+another machine or on Windows:
+
+```python
+from conversation import have_conversation
+from ollama_client import OllamaClient
+
+client = OllamaClient(base_url="http://192.168.1.42:11434")  # or host.docker.internal on Windows
+history = have_conversation("llama2", "mistral", "Debate the future of AI", client=client)
+for model, text in history:
+    print(f"{model}: {text}")
 ```
 
 ### From Python using the OpenAI API
