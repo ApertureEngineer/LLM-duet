@@ -31,8 +31,7 @@ class OllamaClient:
         model: str,
         prompt: str,
         stream: bool = False,
-        options: Optional[Dict] = None,
-        timeout: int = 60,
+        **kwargs: object,
     ) -> str:
         """Generate a completion from a model using the /api/generate endpoint.
 
@@ -45,10 +44,12 @@ class OllamaClient:
         stream:
             Whether to use streaming responses. Streaming is disabled by default
             because this client collects the full response before returning.
-        options:
-            Additional options passed directly to the API.
-        timeout:
-            Timeout for the HTTP request in seconds.
+        kwargs:
+            Additional keyword arguments.
+            options:
+                Additional options passed directly to the API.
+            timeout:
+                Timeout for the HTTP request in seconds. Defaults to 60.
         """
 
         url = f"{self.base_url}/api/generate"
@@ -57,6 +58,8 @@ class OllamaClient:
             "prompt": prompt,
             "stream": stream,
         }
+        options: Dict | None = kwargs.get("options")  # type: ignore[assignment]
+        timeout = int(kwargs.get("timeout", 60))
         if options:
             payload["options"] = options
 
